@@ -6,6 +6,8 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
       POSTGRES_DB: EmployeeDb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
 
@@ -29,4 +31,5 @@ services:
       - "80:80"
     depends_on:
       - webapp
-
+volumes:
+  postgres_data:
