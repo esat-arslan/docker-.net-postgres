@@ -1,0 +1,32 @@
+services:
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: EmployeeDb
+    ports:
+      - "5432:5432"
+
+  webapp:
+    build:
+      context: ./SimpleWebApp
+      dockerfile: Dockerfile
+    container_name: dotnet_app
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=db;Database=EmployeeDb;Username=postgres;Password=password
+    depends_on:
+      - db
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx_proxy
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - webapp
+
